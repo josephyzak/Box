@@ -1,0 +1,40 @@
+<main>
+    <div class="fila-1">
+        <fieldset class="scheduler-border">
+            <legend class="scheduler-border">Configuracion General</legend>
+            <div class="control-group">
+                <label class="control-label input-label">Pez :</label>
+                <label class="control-label input-label">Golf</label>
+                <label class="control-label input-label">Temperatura :</label>
+                <label class="control-label input-label">28 [°C]</label>
+            </div>
+        </fieldset>
+    </div>
+    <div class="cuadrado">
+        <canvas class="canvas1" id="myChart1" width="1350" height="250"></canvas>
+    </div>
+    <div class="numeros">
+        <div class="cuadrado2">
+            <canvas class="canvas2" id="myChart2" width="330" height="320"></canvas>
+        </div>
+        <div class="cuadrado2-text">
+            <canvas class="canvas_temp" id="myChart3" width="330px" height="320px"></canvas>
+            <label class="myNumero">20</label>
+        </div>
+        <div class="cuadrado2-text">
+            <canvas class="canvas_temp" id="myChart4" width="330px" height="320px"></canvas>
+            <label class="myNumero">21</label>
+        </div>
+        <div class="cuadrado2-text">
+            <canvas class="canvas_temp" id="myChart5" width="330px" height="320px"></canvas>
+            <label class="myNumero">22</label>
+        </div>
+    </div>
+    <script>
+        window.onload = function() {
+            //document.getElementById("op2").style.background = "#5fa2db";
+            document.getElementById("op2").classList.toggle("active");
+        }
+    </script>
+    <script src="./script/dashboard.js"></script>
+</main>

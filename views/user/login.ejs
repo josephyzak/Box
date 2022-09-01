@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>login</title>
+    <link rel="stylesheet" href="./css/Style_login.css">
+    <link rel="stylesheet" href="https://fonts.sandbox.google.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    
+</head>
+<body>
+    
+    <div class="loginbox">
+        <img src="img/candado.png" alt="" class="avatar">
+        <h1>Login</h1>
+        <form action="/autentificar" method="Post">
+            <p>Usuario</p>
+            <input type="email" name="email" placeholder="email" required>
+            <p>Contraceña</p>
+            <input type="password" name="password" placeholder="Password" required>
+            <input type="submit" value="Ingresar">
+            <a href="/registro">Crear nuevo Usuario</a>
+        </form>
+    </div>
+</body>
+</html>

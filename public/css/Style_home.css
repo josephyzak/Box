@@ -1,0 +1,35 @@
+main section{
+    /*min-height: 100vh;*/
+    padding: 0 9%;
+    padding-top: 7.5rem;
+    padding-bottom: 2rem;
+}
+.inicio{
+    display: flex;
+    /*align-items: center;*/
+    justify-content: center;
+    background-size: cover;
+    background-position: center;
+}
+.inicio .image img{
+    width: 10vw;
+    animation: float 3s linear infinite;
+}
+@keyframes float{
+    0%, 100%{
+        transform: translateY(0rem);
+    }
+    50%{
+        transform: translateY(-3.5rem);
+    }
+}
+.inicio .contect h3{
+    font-size: 5.5rem;
+    color: var(--color-dark-variant);
+    text-transform: uppercase;
+}
+.inicio .contect p{
+    font-size: 1.7rem;
+    color: var(--color-dark);
+    padding: 1rem 0;
+}

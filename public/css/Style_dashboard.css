@@ -1,0 +1,44 @@
+.numeros {
+    display: flex;
+}
+.cuadrado {
+    position: relative;
+    width: 1360px;
+    height: 250px;
+    background: var(--color-light);
+    border-radius: var(--border-radius-1);
+}
+.cuadrado2 {
+    width: 330px;
+    height: 320px;
+    margin-top: 5px;
+    margin-right: 12px;
+    background: var(--color-light);
+    border-radius: var(--border-radius-1);
+}
+.cuadrado2-text {
+    position: relative;
+    justify-content: center;
+    display: grid;
+
+    width: 330px;
+    height: 320px;
+    margin-top: 5px;
+    margin-right: 12px;
+    background: var(--color-light);
+    border-radius: var(--border-radius-1);
+}
+.canvas_temp {
+    position: relative;
+}
+.myNumero {
+    position: relative;
+    justify-content: center;
+    display: grid;
+    top: -180px;
+
+    font-size: 400%;
+    font-weight: bold;
+    text-shadow: black 6px 6px 8px;
+    text-transform: uppercase;
+}

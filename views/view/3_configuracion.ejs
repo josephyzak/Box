@@ -1,0 +1,148 @@
+<main>
+    <div class="fila-1">
+        <fieldset class="scheduler-border">
+            <legend class="scheduler-border">Tipo de Pez</legend>
+            <div class="control-group">
+                <label class="control-label input-label">Pez :</label>
+                <div class="controls bootstrap-timepicker">
+                    <select name="Productos" id="categoryEvent"></select>
+                </div>
+            </div>
+            <div class="control-button">
+                <button onclick="submitADD()" class="button-ADD">Agregar Producto</button>
+                <button onclick="submitGO()" class="button-GO">Elegir</button>
+                <button onclick="submitSUB()" class="button-SUB">Eliminar</button>
+            </div>
+        </fieldset>
+        <fieldset class="scheduler-border">
+            <legend class="scheduler-border">Datos del Pez</legend>
+            <div class="control-group">
+                <label class="control-label input-label">Pez :</label>
+                <label class="control-label input-label" id="valor-pez">Ninguno</label>
+            </div>
+            <div class="control-group">
+                <label class="control-label input-label">Temperatura :</label>
+                <label class="control-label input-label" id="valor-temp">0 [°C]</label>
+            </div>
+            <div class="control-group">
+                <label class="control-label input-label">pH :</label>
+                <label class="control-label input-label" id="valor-ph"> 0.0</label>
+            </div>
+            <div class="control-group">
+                <label class="control-label input-label">Luminocidad :</label>
+                <label class="control-label input-label" id="valor-lumi">0 [%]</label>
+            </div>
+        </fieldset>
+        <fieldset class="scheduler-border">
+            <legend class="scheduler-border">Control de Comida</legend>
+            <div class="control-group">
+                <label class="control-label input-label">Alimentar cada :</label>
+                <div class="controls bootstrap-timepicker">
+                    <select name="Horas" id="my-horas">
+                        <option value="0" selected>Ninguno</option>
+                        <option value="15">15 minutos</option>
+                        <option value="30">30 minutos</option>
+                        <option value="60">1 hora</option>
+                        <option value="120">2 horas</option>
+                        <option value="240">4 horas</option>
+                        <option value="480">8 horas</option>
+                        <option value="720">12 horas</option>
+                    </select>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label input-label">Cantidad :</label>
+                <div>
+                    <label class="control-label input-label" id="my-label">50</label>
+                    <label class="control-label input-label"> [%]</label>
+                </div>
+                
+            </div>
+            <div class="control-group">
+                <div class="range">
+                    <!--
+                    <div class="sliderValue">
+                        <span id="my-span">50</span>
+                    </div>
+                    -->
+                    <div class="field">
+                        <div class="value left">0</div>
+                        <input type="range" min="0" max="100" value="50" step="1" id="my-input">
+                        <div class="value right">100</div>
+                    </div>
+                </div>
+                <button onclick="submitHora()" class="button-ADD">Configurar</button>
+            </div>
+        </fieldset>
+    </div>
+    <div class="fila-1">
+        <fieldset class="scheduler-border">
+            <legend class="scheduler-border">Control Temperatura</legend>
+            <div class="circulo-on-off1">
+                <div class="circulo-on-off2" id="valor_On_Off">
+                    <%- OnOff %>
+                </div>
+            </div>
+            <div class="control-button">
+                <button onclick="submitONtemp()" class="button-ADD">Prender</button>
+                <button onclick="submitOFFtemp()" class="button-SUB">Apagar</button>
+            </div>
+        </fieldset>
+        <fieldset class="scheduler-border">
+            <legend class="scheduler-border">Control PID</legend>
+            <div class="control-group">
+                <label class="control-label input-label">Coeficientes</label>
+                <label class="control-label input-label">Valor</label>
+            </div>
+            <div class="control-group">
+                <label class="control-label input-label">Kp :</label>
+                <label class="control-label input-label"><%- Kp %></label>
+            </div>
+            <div class="control-group">
+                <label class="control-label input-label">Ki :</label>
+                <label class="control-label input-label"><%- Ki %></label>
+            </div>
+            <div class="control-group">
+                <label class="control-label input-label">Kd :</label>
+                <label class="control-label input-label"><%- Kd %></label>
+            </div>
+            <div class="control-group">
+                <button onclick="submitPID()" class="button-ADD">Cambiar PID</button>
+            </div>
+        </fieldset>
+    </div>
+    <div class="fila-1">
+        <fieldset class="scheduler-border">
+            <legend class="scheduler-border">Control Luminocidad</legend>
+            <div class="circulo-on-off1">
+                <div class="circulo-on-off2" id="valor_On_Off">
+                    <%- OnOffLum %>
+                </div>
+            </div>
+            <div class="control-button">
+                <button onclick="submitONlum()" class="button-ADD">Prender</button>
+                <button onclick="submitOFFlum()" class="button-SUB">Apagar</button>
+            </div>
+        </fieldset>
+        <fieldset class="scheduler-border">
+            <legend class="scheduler-border">Control Bomba</legend>
+            <div class="circulo-on-off1">
+                <div class="circulo-on-off2" id="valor_On_Off">
+                    <%- OnOffBom %>
+                </div>
+            </div>
+            <div class="control-button">
+                <button onclick="submitONbom()" class="button-ADD">Prender</button>
+                <button onclick="submitOFFbom()" class="button-SUB">Apagar</button>
+            </div>
+        </fieldset>
+    </div>
+    <script>
+        window.onload = function() {
+            //document.getElementById("op2").style.background = "#5fa2db";
+            document.getElementById("op3").classList.toggle("active");
+        }
+    </script>
+    <script src="./script/productos.js"></script>
+    <script src="./script/button_conf.js"></script>
+</main>

@@ -1,0 +1,226 @@
+main .fila-1 {
+    width: 1215px;
+    display: flex;
+    margin-top: 10px;
+    justify-content: space-between;
+}
+fieldset {
+    background: var(--color-light);
+    border-radius: var(--border-radius-1);
+    width: 400px;
+}
+fieldset .control-group {
+    display: flex;
+    margin-top: 10px;
+    justify-content: space-between;
+}
+fieldset .control-button {
+    display: flex;
+    margin-top: 10px;
+    justify-content: space-between;
+}
+fieldset.scheduler-border {
+    border: 1px groove #ddd !important;
+    padding: 0 1.4em 1.4em 1.4em !important;
+    margin: 0 0 1.5em 0 !important;
+    -webkit-box-shadow:  0px 0px 0px 0px #000;
+            box-shadow:  0px 0px 0px 0px #000;
+}
+
+legend.scheduler-border {
+    font-size: 1.2em !important;
+    font-weight: bold !important;
+    text-align: left !important;
+}
+main .fila-1 fieldset .control-group .controls {
+    border:1px solid var(--color-info-dark);
+    height:30px;
+    overflow: hidden;
+    width: 230px;
+    position:relative;
+}
+main .fila-1 fieldset .control-group .controls select {
+    background: transparent;
+    border: none;
+    font-size: 14px;
+    height: 30px;
+    padding: 5px;
+    width: 250px;
+    color: var(--color-dark);
+}
+main .fila-1 fieldset .control-group .controls select option {
+    color: var(--color-dark);
+    background: var(--color-info-dark);
+}
+main .fila-1 fieldset .control-group .controls select:focus { outline: none;}
+main .fila-1 fieldset .control-group .controls::after {
+    content:"\025be";
+    display:table-cell;
+    padding-top:7px;
+    text-align:center;
+    width:30px;
+    height:30px;
+    background-color:var(--color-gray-dark);
+    position:absolute;
+    top:0;
+    right:0px;	
+    pointer-events: none;
+}
+.button-ADD{
+    position: relative;
+    border: none;
+    outline: none;
+    width: 120px;
+    height: 30px;
+    background: var(--color-primary);
+    color: var(--color-info-light);
+    font-size: 13px;
+    border-radius: 20px;
+}
+.button-ADD:hover{
+    cursor: pointer;
+    background: var(--color-info-light);
+    color: #000;
+}
+.button-GO{
+    position: relative;
+    border: none;
+    outline: none;
+    width: 120px;
+    height: 30px;
+    background: var(--color-hover);
+    color: var(--color-info-light);
+    font-size: 13px;
+    border-radius: 20px;
+}
+.button-GO:hover{
+    cursor: pointer;
+    background: var(--color-info-light);
+    color: #000;
+}
+.button-SUB{
+    position: relative;
+    border: none;
+    outline: none;
+    width: 120px;
+    height: 30px;
+    background: var(--color-danger);
+    color: var(--color-info-light);
+    font-size: 13px;
+    border-radius: 20px;
+}
+.button-SUB:hover{
+    cursor: pointer;
+    background: var(--color-info-light);
+    color: #000;
+}
+.circulo-on-off1 {
+    position: relative;
+    left: 125px;
+    width: 100px;
+    height: 100px;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+    background: #5cb85c;
+}
+.circulo-on-off2 {
+    position: relative;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    top: 5px;
+    left: 5px;
+    width: 90px;
+    height: 90px;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+    background: #2c885c;
+
+    font-size: 250%;
+    font-weight: bold;
+    text-shadow: black 6px 6px 8px;
+    text-transform: uppercase;
+}
+.range {
+    height: 30px;
+    width: 228px;
+    background: #FFF;
+    border-radius: 10px;
+    padding: 0 65px 0 45px;
+}
+.range .sliderValue {
+    position: relative;
+    width: 100%;
+}
+.range .sliderValue span {
+    position: absolute;
+    height: 30px;
+    width: 30px;
+    color: #FFF;
+    font-weight: 500;
+    top: -45px;
+    transform: translateX(-50%) scale(0);
+    transform-origin: bottom;
+    transition: transform 0.3s ease-in-out;
+    line-height: 55px;
+    z-index: 2;
+}
+.range .sliderValue span.show {
+    transform: translateX(-50%) scale(1);
+}
+.range .sliderValue span:after {
+    position: absolute;
+    content: "";
+    height: 30px;
+    width: 30px;
+    background: #664AFF;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    border: 3px solid #FFF;
+    z-index: -1;
+    border-top-left-radius: 50%;
+    border-top-right-radius: 50%;
+    border-bottom-left-radius: 50%;
+}
+.range .field {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+.range .field .value {
+    position: absolute;
+    font-size: 18px;
+    font-weight: 600;
+    color: #664AFF;
+}
+.range .field .value.left {
+    left: -22px;
+}
+.range .field .value.right {
+    right: -43px;
+}
+.range .field input {
+    -webkit-appearance: none;
+    height: 3px;
+    width: 100%;
+    background: #DDD;
+    border-radius: 5px;
+    outline: none;
+    border: none;
+}
+.range .field input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 20px;
+    width: 20px;
+    background: #664AFF;
+    border-radius: 50%;
+    border: 1px solid #664AFF;
+    cursor: pointer;
+}
+input[type="range"]::-webkit-slider-runnable-track {
+    color: #664AFF;
+}
