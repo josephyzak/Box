@@ -1,7 +1,8 @@
 const mariadb = require("mariadb");
 
 const config = {
-    host: "127.0.0.1",
+    //host: "127.0.0.1",
+    host: "localhost",
     user: "root",
     password: "",
     database: "box",
