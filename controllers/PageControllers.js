@@ -4,6 +4,9 @@ const AesEncryption = require('aes-encryption');
 const aes = new AesEncryption();
 aes.setSecretKey('11122233344455566677788822244455555555555555555231231321313aaaff');
 
+var Gpio = require("onoff").Gpio;
+var led = new Gpio(17, 'out');
+
 const vista_home = (req, res) => {
     if (req.session.var_logging) {
         res.redirect("/Home");
@@ -50,34 +53,26 @@ const click_autentificar = async(req, res) => {
     const Usuario = req.body.email;
     const Password = req.body.password;
     if ((Usuario != "")&&(Password != "")) {
-        const result = await DBConnector.queryWithParams( codigo_mando, [Usuario]);
-        if (result[0] != undefined) {
-            req.session.Nombre_ = result[0].nombre;
-            req.session.Tipo_ = result[0].tipo;
-            req.session.myID_ = result[0].ID;
-            req.session.valor_dark = result[0].color;
-            req.session.myImg = result[0].img;
-            req.session.save();
-            if (result.length == 0 || !(Password == aes.decrypt(result[0].password))) {
-                /*notifier.notify({
-                    title: "ERROR",
-                    message: "Usuario o Contraceña son incorectas ...",
-                    sound: true
-                  });*/
-                res.redirect("/");
-            } else {
-                req.session.var_logging = true;
+        await DBConnector.queryWithParams( codigo_mando, [Usuario])
+        .then((result) => {
+            if (result[0] != undefined) {
+                req.session.Nombre_ = result[0].nombre;
+                req.session.Tipo_ = result[0].tipo;
+                req.session.myID_ = result[0].ID;
+                req.session.valor_dark = result[0].color;
+                req.session.myImg = result[0].img;
                 req.session.save();
-                /*notifier.notify({
-                    title: "Notificación",
-                    message: "Se ingreso al Usuario satifactoriamente ...",
-                    sound: true
-                  });*/
+                if (result.length == 0 || !(Password == aes.decrypt(result[0].password))) {
+                    res.redirect("/");
+                } else {
+                    req.session.var_logging = true;
+                    req.session.save();
+                    res.redirect("/");
+                }
+            } else {
                 res.redirect("/");
             }
-        } else {
-            res.redirect("/");
-        }
+        });
     } else {
         res.redirect("/");
     }
@@ -98,21 +93,29 @@ const vista_General = (req, res) => {
         res.redirect("/login");
     }
 };
-const vista_DashBoard = (req, res) => {
-    if (req.session.var_logging) {
-        var datos = {
-            myImg_: req.session.myImg,
-            myColor: req.session.valor_dark,
-            myID_: req.session.myID_,
-            Nombre_: req.session.Nombre_,
-            Tipo_: req.session.Tipo_,
-            title: "DashBoard",
-            layout: "./layout/hoja_01.ejs"
-        }; 
-        res.render("./view/2_dashboard.ejs", datos);
-    } else {
-        res.redirect("/login");
-    }
+const vista_DashBoard = async(req, res) => {
+    const mando = "SELECT pez, temperatura, pH_low, pH_up FROM vista_pez WHERE item = ?";
+    await DBConnector.queryWithParams(mando, [1])
+    .then((result) => {
+        if (req.session.var_logging) {
+            var datos = {
+                myImg_: req.session.myImg,
+                myColor: req.session.valor_dark,
+                myID_: req.session.myID_,
+                Nombre_: req.session.Nombre_,
+                Tipo_: req.session.Tipo_,
+                title: "DashBoard",
+                layout: "./layout/hoja_01.ejs",
+                pez: result[0].pez,
+                temperatura: result[0].temperatura,
+                pH_low: result[0].pH_low,
+                pH_up: result[0].pH_up
+            }; 
+            res.render("./view/2_dashboard.ejs", datos);
+        } else {
+            res.redirect("/login");
+        }
+    });
 };
 const vista_Configuracion = async(req, res) => {
     const mando = "SELECT kp, ki, kd, on_off_temp, on_off_lum, on_off_bom FROM vista_pez WHERE item = ?";
@@ -219,13 +222,19 @@ const api_PID = async(req, res) => {
 };
 const api_on_lum = async(req, res) => {
     const mando = "UPDATE vista_pez SET on_off_lum = ? WHERE item = 1";
-    await DBConnector.queryWithParams(mando, ["on"]);
-    res.send("GG");
+    await DBConnector.queryWithParams(mando, ["on"])
+    .then(() => {
+        led.writeSync(1);
+        res.send("GG");
+    });
 };
 const api_off_lum = async(req, res) => {
     const mando = "UPDATE vista_pez SET on_off_lum = ? WHERE item = 1";
-    await DBConnector.queryWithParams(mando, ["off"]);
-    res.send("GG");
+    await DBConnector.queryWithParams(mando, ["off"])
+    .then(() => {
+        led.writeSync(0);
+        res.send("GG");
+    });
 };
 const api_on_bom = async(req, res) => {
     const mando = "UPDATE vista_pez SET on_off_bom = ? WHERE item = 1";

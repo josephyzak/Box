@@ -1,13 +1,14 @@
 main .fila-1 {
-    width: 1215px;
+    width: 1370px;
     display: flex;
     margin-top: 10px;
     justify-content: space-between;
 }
+
 fieldset {
     background: var(--color-light);
     border-radius: var(--border-radius-1);
-    width: 400px;
+    width: 450px;
 }
 fieldset .control-group {
     display: flex;
