@@ -3,9 +3,9 @@ const mariadb = require("mariadb");
 const config = {
     //host: "127.0.0.1",
     //host: "localhost",
-    host: "192.168.0.8",
-    user: "root",
-    password: "liofi1234",
+    host: "192.168.0.27",
+    user: "Luna",
+    password: "liofilizador",
     database: "box",
     connectionLimit: 5,
     acquireTime: 300
