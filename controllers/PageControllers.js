@@ -4,8 +4,13 @@ const AesEncryption = require('aes-encryption');
 const aes = new AesEncryption();
 aes.setSecretKey('11122233344455566677788822244455555555555555555231231321313aaaff');
 
-var Gpio = require("onoff").Gpio;
-var led = new Gpio(17, 'out');
+var gpiop = require("rpi-gpio").promise;
+const pin1 = 7;
+gpiop.setup(pin1, gpiop.DIR_OUT).then(() => {
+    return gpiop.write(pin1, false);
+}).catch((err) => {
+    console.log("Error: ", err.toString());
+});
 
 const vista_home = (req, res) => {
     if (req.session.var_logging) {
@@ -224,7 +229,7 @@ const api_on_lum = async(req, res) => {
     const mando = "UPDATE vista_pez SET on_off_lum = ? WHERE item = 1";
     await DBConnector.queryWithParams(mando, ["on"])
     .then(() => {
-        led.writeSync(1);
+        gpiop.write(pin1, true);
         res.send("GG");
     });
 };
@@ -232,7 +237,7 @@ const api_off_lum = async(req, res) => {
     const mando = "UPDATE vista_pez SET on_off_lum = ? WHERE item = 1";
     await DBConnector.queryWithParams(mando, ["off"])
     .then(() => {
-        led.writeSync(0);
+        gpiop.write(pin1, false);
         res.send("GG");
     });
 };
