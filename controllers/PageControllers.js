@@ -1,9 +1,11 @@
 const DBConnector = require("../BaseData/database.js");
+var RPIO = require("../public/script/PWM.js");
 
 const AesEncryption = require('aes-encryption');
 const aes = new AesEncryption();
 aes.setSecretKey('11122233344455566677788822244455555555555555555231231321313aaaff');
 
+/*
 var rpio = require("rpio");
 rpio.init({mapping: "physical", gpiomem: false, close_on_exit: false});
 const pin1 = 10;
@@ -16,6 +18,7 @@ rpio.open(pin1, rpio.OUTPUT, rpio.LOW);
 rpio.open(pin2, rpio.PWM);
 rpio.pwmSetClockDivider(clockdiv);
 rpio.pwmSetRange(pin2, range);
+*/
 /*
 rpio.spiBegin();
 rpio.spiChipSelect(0);
@@ -50,26 +53,30 @@ setInterval(function() {
     };
 }, 1000);
 */
-
+RPIO.SIGTERM();
+RPIO.SIGINT();
+RPIO.salida();
+/*
 process.on('SIGTERM', function () {
-    rpio.pwmSetData(pin2, 0);
-    rpio.close(pin2, rpio.PIN_RESET);
+    rpio.pwmSetData(myRPIO.pin2, 0);
+    rpio.close(myRPIO.pin2, myRPIO.rpio.PIN_RESET);
     process.exit(0);
 });
 
 process.on('SIGINT', function () {
-    rpio.pwmSetData(pin2, 0);
-    rpio.close(pin2, rpio.PIN_RESET);
+    rpio.pwmSetData(myRPIO.pin2, 0);
+    rpio.close(myRPIO.pin2, myRPIO.rpio.PIN_RESET);
     process.exit(0);
 });
 
 process.on('exit', function () {
-    rpio.pwmSetData(pin2, 0);
-    rpio.close(pin2, rpio.PIN_RESET);
+    rpio.pwmSetData(myRPIO.pin2, 0);
+    rpio.close(myRPIO.pin2, myRPIO.rpio.PIN_RESET);
     console.log('\nShutting down, performing GPIO cleanup');
     rpio.spiEnd();
     process.exit(0);
 });
+*/
 
 const vista_home = (req, res) => {
     if (req.session.var_logging) {
@@ -294,7 +301,8 @@ const api_on_lum = async(req, res) => {
     await DBConnector.queryWithParams(mando1, [1])
     .then((result) => {
 	//console.log((1024 * result[0].luminocidad) / 100);
-	rpio.pwmSetData(pin2, parseInt((1024 * result[0].luminocidad) / 100));
+	    //rpio.pwmSetData(pin2, parseInt((1024 * result[0].luminocidad) / 100));
+        RPIO.setDataPWM(2, result[0].luminocidad);
         res.send("GG");
     });
 };
@@ -302,8 +310,9 @@ const api_off_lum = async(req, res) => {
     const mando = "UPDATE vista_pez SET on_off_lum = ? WHERE item = 1";
     await DBConnector.queryWithParams(mando, ["off"])
     .then(() => {
-	//rpio.close(pin2, rpio.PIN_RESET);
-        rpio.pwmSetData(pin2, 0);
+	    //rpio.close(pin2, rpio.PIN_RESET);
+        //rpio.pwmSetData(pin2, 0);
+        RPIO.setDataPWM(2, 0);
         res.send("GG");
     });
 };
@@ -311,16 +320,18 @@ const api_on_bom = async(req, res) => {
     const mando = "UPDATE vista_pez SET on_off_bom = ? WHERE item = 1";
     await DBConnector.queryWithParams(mando, ["on"])
     .then(() => {
-	rpio.write(pin1, rpio.HIGH);
-	res.send("GG");
+        //rpio.write(pin1, rpio.HIGH);
+        RPIO.writePWM("HIGH");
+	    res.send("GG");
     });
 };
 const api_off_bom = async(req, res) => {
     const mando = "UPDATE vista_pez SET on_off_bom = ? WHERE item = 1";
     await DBConnector.queryWithParams(mando, ["off"])
     .then(() => {
-	rpio.write(pin1, rpio.LOW);
-	res.send("GG");
+	    //rpio.write(pin1, rpio.LOW);
+        RPIO.writePWM("LOW");
+	    res.send("GG");
     });
 };
 const api_hora_comida = async(req, res) => {
