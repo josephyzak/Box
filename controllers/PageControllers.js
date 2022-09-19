@@ -4,12 +4,71 @@ const AesEncryption = require('aes-encryption');
 const aes = new AesEncryption();
 aes.setSecretKey('11122233344455566677788822244455555555555555555231231321313aaaff');
 
-var gpiop = require("rpi-gpio").promise;
-const pin1 = 7;
-gpiop.setup(pin1, gpiop.DIR_OUT).then(() => {
-    return gpiop.write(pin1, false);
-}).catch((err) => {
-    console.log("Error: ", err.toString());
+var rpio = require("rpio");
+rpio.init({mapping: "physical", gpiomem: false, close_on_exit: false});
+const pin1 = 10;
+const pin2 = 12;
+const range = 1024;
+const clockdiv = 8;
+
+rpio.open(pin1, rpio.OUTPUT, rpio.LOW);
+
+rpio.open(pin2, rpio.PWM);
+rpio.pwmSetClockDivider(clockdiv);
+rpio.pwmSetRange(pin2, range);
+/*
+rpio.spiBegin();
+rpio.spiChipSelect(0);
+rpio.spiSetCSPolarity(0, rpio.HIGH);
+rpio.spiSetClockDivider(128);
+rpio.spiSetDataMode(0);
+
+process.stdout.write('\x1b[36m');
+for (var channelHeader = 0; channelHeader <= 7; channelHeader++) {
+    process.stdout.write('ch' + channelHeader.toString() + (channelHeader == 7 ? '\x1b[0m\n' : '\t'));
+}
+setInterval(function() {
+    for (var channel = 0; channel <= 7; channel++) {
+        // Prepare TX buffer [trigger byte = 0x01] [channel 0 = 0x80 (128)] [placeholder = 0x01]
+        // var sendBuffer = Buffer.alloc([0x01, (8 + channel << 4), 0x01]);
+	var sendBuffer = Buffer.from("HELLOSPI");
+	//var sendBuffer = Buffer.alloc([0x01, 0x08, 0x01]);
+
+        var recieveBuffer = Buffer.alloc(sendBuffer.length);
+	rpio.spiTransfer(sendBuffer, recieveBuffer, sendBuffer.length); // Send TX buffer and recieve RX buffer
+
+        // Extract value from output buffer. Ignore first byte.
+        var junk = recieveBuffer[0],
+            MSB = recieveBuffer[1],
+            LSB = recieveBuffer[2];
+
+        // Ignore first six bits of MSB, bit shift MSB 8 positions and
+        // finally combine LSB and MSB to get a full 10 bit value
+        var value = ((MSB & 3) << 8) + LSB;
+
+        process.stdout.write(value.toString() + (channel == 7 ? '\n' : '\t'));
+    };
+}, 1000);
+*/
+
+process.on('SIGTERM', function () {
+    rpio.pwmSetData(pin2, 0);
+    rpio.close(pin2, rpio.PIN_RESET);
+    process.exit(0);
+});
+
+process.on('SIGINT', function () {
+    rpio.pwmSetData(pin2, 0);
+    rpio.close(pin2, rpio.PIN_RESET);
+    process.exit(0);
+});
+
+process.on('exit', function () {
+    rpio.pwmSetData(pin2, 0);
+    rpio.close(pin2, rpio.PIN_RESET);
+    console.log('\nShutting down, performing GPIO cleanup');
+    rpio.spiEnd();
+    process.exit(0);
 });
 
 const vista_home = (req, res) => {
@@ -227,9 +286,15 @@ const api_PID = async(req, res) => {
 };
 const api_on_lum = async(req, res) => {
     const mando = "UPDATE vista_pez SET on_off_lum = ? WHERE item = 1";
-    await DBConnector.queryWithParams(mando, ["on"])
-    .then(() => {
-        gpiop.write(pin1, true);
+    await DBConnector.queryWithParams(mando, ["on"]);
+//    .then(async() => {
+//	const mando1 = "SELECT luminocidad FROM vista_pez WHERE
+//    });
+    const mando1 = "SELECT luminocidad FROM vista_pez WHERE item = ?";
+    await DBConnector.queryWithParams(mando1, [1])
+    .then((result) => {
+	//console.log((1024 * result[0].luminocidad) / 100);
+	rpio.pwmSetData(pin2, parseInt((1024 * result[0].luminocidad) / 100));
         res.send("GG");
     });
 };
@@ -237,24 +302,33 @@ const api_off_lum = async(req, res) => {
     const mando = "UPDATE vista_pez SET on_off_lum = ? WHERE item = 1";
     await DBConnector.queryWithParams(mando, ["off"])
     .then(() => {
-        gpiop.write(pin1, false);
+	//rpio.close(pin2, rpio.PIN_RESET);
+        rpio.pwmSetData(pin2, 0);
         res.send("GG");
     });
 };
 const api_on_bom = async(req, res) => {
     const mando = "UPDATE vista_pez SET on_off_bom = ? WHERE item = 1";
-    await DBConnector.queryWithParams(mando, ["on"]);
-    res.send("GG");
+    await DBConnector.queryWithParams(mando, ["on"])
+    .then(() => {
+	rpio.write(pin1, rpio.HIGH);
+	res.send("GG");
+    });
 };
 const api_off_bom = async(req, res) => {
     const mando = "UPDATE vista_pez SET on_off_bom = ? WHERE item = 1";
-    await DBConnector.queryWithParams(mando, ["off"]);
-    res.send("GG");
+    await DBConnector.queryWithParams(mando, ["off"])
+    .then(() => {
+	rpio.write(pin1, rpio.LOW);
+	res.send("GG");
+    });
 };
 const api_hora_comida = async(req, res) => {
     const mando = "UPDATE vista_pez SET minutos = ?, comida = ? WHERE item = ?";
-    await DBConnector.queryWithParams(mando, [req.params.hora, req.params.comida, 1]);
-    res.send("GG");
+    await DBConnector.queryWithParams(mando, [req.params.hora, req.params.comida, 1])
+    .then(() => {
+	res.send("GG");
+    });
 };
 
 module.exports = {
